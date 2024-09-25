@@ -1,0 +1,41 @@
+name: leafguard
+description: "A new Flutter project."
+
+publish_to: 'none' 
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.6
+  image_picker: ^0.8.5+3
+  http: ^1.2.1
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.10.0
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_lints: ^3.0.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_logo.png"  # The path to your icon file
+
+flutter:
+
+  uses-material-design: true
+  assets:
+    - assets/upload.jpg
+    - assets/logo.png
+
+
