@@ -1,18 +1,29 @@
-from flask import Flask, request, jsonify
+from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+import uvicorn
 import cv2
 import numpy as np
 import tensorflow as tf
 import pandas as pd
+import os
 
-from flask_cors import CORS
+app = FastAPI()
 
-app = Flask(__name__)
-CORS(app)
+# Enable CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-model = tf.keras.models.load_model('D:/dk-ai-app/Plant-Disease-Detection/myModel.h5') # the path of the model
+# Load your model and CSV file
+model = tf.keras.models.load_model('./myModel.h5')
+df = pd.read_csv('./p4.csv')
 
-df = pd.read_csv('D:/dk-ai-app/Plant-Disease-Detection/p4.csv')  # the path of the csv file
-
+# Preprocess image as per model's requirement
 def preprocess_image(image_path):
     image = cv2.imread(image_path)
     image = cv2.resize(image, (224, 224))
@@ -21,35 +32,37 @@ def preprocess_image(image_path):
     image = np.expand_dims(image, axis=0)
     return image
 
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
-    return response
+@app.get("/get")
+async def get():
+    return JSONResponse(content={"message": "API is hitting perfectly"})
 
+@app.post("/predict")
+async def predict(image: UploadFile = File(...)):
+    image_path = f"./{image.filename}"
+    
+    # Save the uploaded image
+    with open(image_path, "wb") as image_file:
+        content = await image.read()
+        image_file.write(content)
+    print(f"Image saved at: {image_path}")
+    
+    # Preprocess the image and make a prediction
+    processed_image = preprocess_image(image_path)
+    prediction = model.predict(processed_image)
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    image_file = request.files['image']
-    image_path = "./" + image_file.filename
-    image_file.save(image_path)
-    print(f"Image saved at: {image_path}")  # Debugging line
-    
-    image = preprocess_image(image_path)
-    prediction = model.predict(image)
-    
+    # Get the top 3 predictions
     top3_indices = np.argsort(prediction[0])[-3:][::-1]
     top3_class_names = [df.iloc[i]['Label'] for i in top3_indices]
     top3_scores = prediction[0][top3_indices]
     top3_percentages = top3_scores / np.sum(top3_scores) * 100
-    
+
+    # Prepare the response
     response = {}
     for i in range(3):
         index = top3_indices[i]
         treatment = df.iloc[index]['Treatment']
         if pd.isna(treatment):
-            treatment = "No treatment needed"  
+            treatment = "No treatment needed"
 
         response[f"prediction_{i+1}"] = {
             "class_name": top3_class_names[i],
@@ -60,12 +73,10 @@ def predict():
             "treatment": treatment
         }
     
-    return jsonify(response)
+    # Delete the saved image after processing
+    os.remove(image_path)
 
-@app.route('/get', methods=['GET'])
-def get():
-    return jsonify({"message": "API is hitting perfectly"})
+    return JSONResponse(content=response)
 
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+if __name__ == "_main_":
+    uvicorn.run(app, host="0.0.0.0", port=80)
