@@ -5,6 +5,8 @@ AI-Driven Plant Health Diagnostic App : Source code for a mobile app using AI to
 Below is video of the LeafGuard application in action, showcasing its user-friendly interface and powerful features designed to help identify plant diseases effectively.
 
 
+https://github.com/user-attachments/assets/771b10c0-975e-4444-95c8-43cc70336315
+
 
 ### To run the application 
 
@@ -27,7 +29,7 @@ To run the application as wireless then follow these steps:
 
 1. connect your laptop and mobile device in the same network.
 2. In your laptop cmd terminal type `ipconfig` and copy the ipv4 url which looks like ( 192.xx.xx.xx ).
-3. Then go the *leafgaurd/lib/constants.dart* file and past the ip then run the application.
+3. Then go the "*leafgaurd/lib/constants.dart*" file and past the ip then run the application.
 
 NOTE : it will work only if both devices are connected in the same network and ip address will change based on the network.
 
