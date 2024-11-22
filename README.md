@@ -5,7 +5,7 @@ AI-Driven Plant Health Diagnostic App : Source code for a mobile app using AI to
 Below is video of the LeafGuard application in action, showcasing its user-friendly interface and powerful features designed to help identify plant diseases effectively.
 
 
-https://github.com/user-attachments/assets/771b10c0-975e-4444-95c8-43cc70336315
+https://github.com/user-attachments/assets/02d057b2-32c8-4f89-b32f-8a8817716d0e
 
 
 ### To run the application 
