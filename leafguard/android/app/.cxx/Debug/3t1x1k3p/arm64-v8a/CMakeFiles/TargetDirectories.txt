@@ -1,0 +1,2 @@
+D:/Projects/bigdata/AI-plant-disease-detection-app/leafguard/android/app/.cxx/Debug/3t1x1k3p/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/Projects/bigdata/AI-plant-disease-detection-app/leafguard/android/app/.cxx/Debug/3t1x1k3p/arm64-v8a/CMakeFiles/rebuild_cache.dir
